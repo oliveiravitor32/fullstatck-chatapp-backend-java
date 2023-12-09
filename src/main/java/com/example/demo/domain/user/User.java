@@ -1,12 +1,11 @@
 package com.example.demo.domain.user;
 
 import com.example.demo.domain.message.Message;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Entity
 @Table(name = "users")
@@ -18,12 +17,17 @@ public class User implements Serializable {
     String name;
     String password;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
+    Set<Message> messages;
+
     public User() {}
 
     public User(Long id, String name, String password) {
         this.id = id;
         this.name = name;
         this.password = password;
+        this.messages = new HashSet<>();
     }
 
     public Long getId() {
@@ -48,6 +52,10 @@ public class User implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Set<Message> getMessages() {
+        return messages;
     }
 
     @Override

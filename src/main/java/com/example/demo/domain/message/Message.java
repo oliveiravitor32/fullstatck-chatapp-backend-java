@@ -2,6 +2,8 @@ package com.example.demo.domain.message;
 
 import com.example.demo.domain.chatroom.ChatRoom;
 import com.example.demo.domain.user.AuthorDTO;
+import com.example.demo.domain.user.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -14,21 +16,30 @@ public class Message implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String content;
+
     private LocalDateTime timestemp;
-    private AuthorDTO author;
+
     private Integer likes;
 
+    @ManyToOne
+    @JoinColumn(name = "author_id")
+    private User author;
+
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "chatroom_id")
     private ChatRoom chatRoom;
 
     public Message() {}
 
-    public Message(String content, LocalDateTime timestemp, AuthorDTO author) {
+    public Message(Long id, String content, LocalDateTime timestemp, User author, ChatRoom chatRoom) {
+        this.id = id;
         this.content = content;
         this.timestemp = timestemp;
         this.author = author;
+        this.chatRoom = chatRoom;
         this.likes = 0;
     }
 
@@ -56,11 +67,11 @@ public class Message implements Serializable {
         this.timestemp = timestemp;
     }
 
-    public AuthorDTO getAuthor() {
+    public User getAuthor() {
         return author;
     }
 
-    public void setAuthor(AuthorDTO author) {
+    public void setAuthor(User author) {
         this.author = author;
     }
 
@@ -70,6 +81,14 @@ public class Message implements Serializable {
 
     public void setLikes(Integer likes) {
         this.likes = likes;
+    }
+
+    public ChatRoom getChatRoom() {
+        return chatRoom;
+    }
+
+    public void setChatRoom(ChatRoom chatRoom) {
+        this.chatRoom = chatRoom;
     }
 
     @Override

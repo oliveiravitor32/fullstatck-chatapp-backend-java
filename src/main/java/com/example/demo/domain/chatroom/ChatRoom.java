@@ -5,7 +5,9 @@ import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "chatrooms")
@@ -17,7 +19,7 @@ public class ChatRoom implements Serializable{
     String name;
 
     @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL)
-    List<Message> messages = new ArrayList<>();
+    List<Message> messages;
 
     public ChatRoom() {}
     public ChatRoom(Long id, String name) {
