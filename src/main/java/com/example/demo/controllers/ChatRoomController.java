@@ -6,6 +6,7 @@ import com.example.demo.domain.chatroom.ChatRoomWithAuthorOnMessageDTO;
 import com.example.demo.domain.chatroom.ChatRoomWithoutMessagesDTO;
 import com.example.demo.domain.message.Message;
 import com.example.demo.domain.message.MessageWithAuthorDTO;
+import com.example.demo.domain.user.AuthorDTO;
 import com.example.demo.services.ChatRoomService;
 import com.example.demo.services.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,11 +46,13 @@ public class ChatRoomController {
     public ResponseEntity<ChatRoomWithAuthorOnMessageDTO> getRoomById(@PathVariable Long id) {
         ChatRoom chatRoom = service.findById(id);
 
-        List<MessageWithAuthorDTO> messagesWithAuthor = chatRoom.getMessages().stream().map((m) -> new MessageWithAuthorDTO(m))
+        List<MessageWithAuthorDTO> messagesWithAuthorDTO = chatRoom.getMessages().stream().map(
+                (m) -> new MessageWithAuthorDTO(m.getId(), m.getContent(), m.getTimestemp(), m.getLikes(),
+                        new AuthorDTO(m.getAuthor().getId(), m.getAuthor().getName()), m.getChatRoom()))
                 .collect(Collectors.toList());
 
         ChatRoomWithAuthorOnMessageDTO chatRoomWithAuthor =
-                new ChatRoomWithAuthorOnMessageDTO(chatRoom.getId(), chatRoom.getName(), messagesWithAuthor);
+                new ChatRoomWithAuthorOnMessageDTO(chatRoom.getId(), chatRoom.getName(), messagesWithAuthorDTO);
 
         return ResponseEntity.ok().body(chatRoomWithAuthor);
     }
@@ -57,7 +60,9 @@ public class ChatRoomController {
     @GetMapping("/rooms/messages/{id}")
     public ResponseEntity<List<MessageWithAuthorDTO>> getAllMessagesByRoomId(@PathVariable Long id) {
         Set<Message> messages = service.getAllMessages(id);
-        List<MessageWithAuthorDTO> messagesWithAuthorDTO = messages.stream().map((m) -> new MessageWithAuthorDTO(m))
+        List<MessageWithAuthorDTO> messagesWithAuthorDTO = messages.stream().map(
+                (m) -> new MessageWithAuthorDTO(m.getId(), m.getContent(), m.getTimestemp(), m.getLikes(),
+                        new AuthorDTO(m.getAuthor().getId(), m.getAuthor().getName()), m.getChatRoom()))
                 .collect(Collectors.toList());
         return ResponseEntity.ok().body(messagesWithAuthorDTO);
     }

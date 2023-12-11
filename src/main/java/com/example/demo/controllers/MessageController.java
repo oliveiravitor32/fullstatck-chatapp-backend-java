@@ -1,9 +1,8 @@
 package com.example.demo.controllers;
 
-import com.example.demo.domain.chatroom.ChatRoom;
-import com.example.demo.domain.chatroom.ChatRoomWithAuthorOnMessageDTO;
 import com.example.demo.domain.message.Message;
 import com.example.demo.domain.message.MessageWithAuthorDTO;
+import com.example.demo.domain.user.AuthorDTO;
 import com.example.demo.services.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +28,10 @@ public class MessageController {
     @GetMapping("/{id}")
     public ResponseEntity<MessageWithAuthorDTO> getMessageById(@PathVariable Long id) {
         Message message = service.findById(id);
-        MessageWithAuthorDTO messageWithAuthorDTO = new MessageWithAuthorDTO(message);
+        MessageWithAuthorDTO messageWithAuthorDTO =
+                new MessageWithAuthorDTO(message.getId(), message.getContent(), message.getTimestemp(),
+                        message.getLikes(),new AuthorDTO(message.getAuthor().getId(), message.getAuthor().getName())
+                        , message.getChatRoom());
         return ResponseEntity.ok().body(messageWithAuthorDTO);
     }
 }
