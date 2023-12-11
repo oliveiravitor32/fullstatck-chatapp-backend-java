@@ -11,12 +11,12 @@ import java.time.LocalDateTime;
 @ControllerAdvice
 public class ControllerExceptionHandler {
 
-    @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<StandardError> objectNotFound(NotFoundException e, HttpServletRequest request) {
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<StandardError> handleObjectNotFound(ResourceNotFoundException e, HttpServletRequest request) {
         String error = "Resource not found";
         HttpStatus status =  HttpStatus.NOT_FOUND;
         StandardError err = new StandardError(LocalDateTime.now(), status.value(), error, e.getMessage(), request.getRequestURI());
-        return ResponseEntity.status(status).body(err);
+        return ResponseEntity.status(err.getStatus()).body(err);
     }
 
 }

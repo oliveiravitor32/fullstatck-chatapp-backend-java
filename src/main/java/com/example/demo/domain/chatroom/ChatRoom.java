@@ -1,12 +1,11 @@
 package com.example.demo.domain.chatroom;
 
 import com.example.demo.domain.message.Message;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -17,7 +16,6 @@ public class ChatRoom implements Serializable{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-
     @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL)
     private Set<Message> messages = new HashSet<>();
 

@@ -2,6 +2,7 @@ package com.example.demo.domain.message;
 
 import com.example.demo.domain.chatroom.ChatRoom;
 import com.example.demo.domain.user.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Formula;
 
@@ -22,6 +23,7 @@ public class Message implements Serializable {
 
     private LocalDateTime timestemp;
 
+    @JsonIgnore
     @ManyToMany
     @JoinTable(
             name = "liked_messages",
@@ -36,6 +38,7 @@ public class Message implements Serializable {
     @JoinColumn(name = "author_id")
     private User author;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "chatroom_id")
     private ChatRoom chatRoom;
@@ -83,7 +86,7 @@ public class Message implements Serializable {
         this.author = author;
     }
 
-    public Set getUserWhoLiked() {
+    public Set getUsersWhoLiked() {
         return usersWhoLiked;
     }
 

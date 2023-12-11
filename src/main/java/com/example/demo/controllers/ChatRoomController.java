@@ -20,7 +20,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping(value = "/chat")
+@RequestMapping(value = "/chatroom")
 public class ChatRoomController {
 
     @Autowired
@@ -34,7 +34,7 @@ public class ChatRoomController {
         return ResponseEntity.ok().body(chatsWithoutMessages);
     }
 
-    @PostMapping(value = "/rooms")
+    @PostMapping
     public ResponseEntity<ChatRoom> createRoom(@RequestBody ChatRoom room) {
         ChatRoom chatRoom = service.insert(room);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
@@ -42,28 +42,21 @@ public class ChatRoomController {
         return ResponseEntity.created(uri).body(chatRoom);
     }
 
-    @GetMapping(value = "/rooms/{id}")
-    public ResponseEntity<ChatRoomWithAuthorOnMessageDTO> getRoomById(@PathVariable Long id) {
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<ChatRoomWithoutMessagesDTO> getRoomById(@PathVariable Long id) {
         ChatRoom chatRoom = service.findById(id);
+        ChatRoomWithoutMessagesDTO chatRoomWithoutMessagesDTO = new ChatRoomWithoutMessagesDTO(chatRoom.getId(), chatRoom.getName());
 
-        List<MessageWithAuthorDTO> messagesWithAuthorDTO = chatRoom.getMessages().stream().map(
-                (m) -> new MessageWithAuthorDTO(m.getId(), m.getContent(), m.getTimestemp(), m.getLikes(),
-                        new AuthorDTO(m.getAuthor().getId(), m.getAuthor().getName()), m.getChatRoom()))
-                .collect(Collectors.toList());
-
-        ChatRoomWithAuthorOnMessageDTO chatRoomWithAuthor =
-                new ChatRoomWithAuthorOnMessageDTO(chatRoom.getId(), chatRoom.getName(), messagesWithAuthorDTO);
-
-        return ResponseEntity.ok().body(chatRoomWithAuthor);
+        return ResponseEntity.ok().body(chatRoomWithoutMessagesDTO);
     }
 
-    @GetMapping(value = "/rooms/messages/{id}")
-    public ResponseEntity<List<MessageWithAuthorDTO>> getAllMessagesByRoomId(@PathVariable Long id) {
+    @GetMapping(value = "/{id}/messages")
+    public ResponseEntity<Set<MessageWithAuthorDTO>> getAllMessagesByRoomId(@PathVariable Long id) {
         Set<Message> messages = service.getAllMessages(id);
-        List<MessageWithAuthorDTO> messagesWithAuthorDTO = messages.stream().map(
+        Set<MessageWithAuthorDTO> messagesWithAuthorDTO = messages.stream().map(
                 (m) -> new MessageWithAuthorDTO(m.getId(), m.getContent(), m.getTimestemp(), m.getLikes(),
                         new AuthorDTO(m.getAuthor().getId(), m.getAuthor().getName()), m.getChatRoom()))
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
         return ResponseEntity.ok().body(messagesWithAuthorDTO);
     }
 }

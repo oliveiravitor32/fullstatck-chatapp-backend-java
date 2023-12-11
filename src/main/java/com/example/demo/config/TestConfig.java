@@ -51,8 +51,8 @@ public class TestConfig implements CommandLineRunner {
         Message msg3 = new Message(null, "Acordei!", LocalDateTime.now(), user2, room1);
         Message msg4 = new Message(null, "Já ouvi sim.", LocalDateTime.now(), user1, room2);
 
-        msg2.getUserWhoLiked().add(user1);
-        msg3.getUserWhoLiked().add(user1);
+        msg2.getUsersWhoLiked().add(user1);
+        msg3.getUsersWhoLiked().add(user1);
         messageRepository.saveAll(Arrays.asList(msg1, msg2, msg3, msg4));
 
     }
