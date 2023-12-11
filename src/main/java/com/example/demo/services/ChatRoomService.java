@@ -2,6 +2,7 @@ package com.example.demo.services;
 
 import com.example.demo.domain.chatroom.ChatRoom;
 import com.example.demo.domain.message.Message;
+import com.example.demo.exceptions.NotFoundException;
 import com.example.demo.repositories.ChatRoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,8 +21,7 @@ public class ChatRoomService {
     }
 
     public ChatRoom findById(Long id) {
-        Optional<ChatRoom> room = repository.findById(id);
-        return room.get();
+        return  repository.findById(id).orElseThrow(() -> new NotFoundException(id));
     }
 
     public ChatRoom insert(ChatRoom room) {
