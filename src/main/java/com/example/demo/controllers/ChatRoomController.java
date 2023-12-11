@@ -20,13 +20,13 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/chat")
+@RequestMapping(value = "/chat")
 public class ChatRoomController {
 
     @Autowired
     private ChatRoomService service;
 
-    @GetMapping("/rooms")
+    @GetMapping(value = "/rooms")
     public ResponseEntity<List<ChatRoomWithoutMessagesDTO>> getAllRooms() {
         List<ChatRoom> chats = service.findAll();
         List<ChatRoomWithoutMessagesDTO> chatsWithoutMessages = chats.stream().map(
@@ -34,15 +34,15 @@ public class ChatRoomController {
         return ResponseEntity.ok().body(chatsWithoutMessages);
     }
 
-    @PostMapping("/rooms")
-    public ResponseEntity<Void> createRoom(@RequestBody ChatRoom room) {
+    @PostMapping(value = "/rooms")
+    public ResponseEntity<ChatRoom> createRoom(@RequestBody ChatRoom room) {
         ChatRoom chatRoom = service.insert(room);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}").buildAndExpand(chatRoom.getId()).toUri();
-        return ResponseEntity.created(uri).build();
+        return ResponseEntity.created(uri).body(chatRoom);
     }
 
-    @GetMapping("/rooms/{id}")
+    @GetMapping(value = "/rooms/{id}")
     public ResponseEntity<ChatRoomWithAuthorOnMessageDTO> getRoomById(@PathVariable Long id) {
         ChatRoom chatRoom = service.findById(id);
 
@@ -57,7 +57,7 @@ public class ChatRoomController {
         return ResponseEntity.ok().body(chatRoomWithAuthor);
     }
 
-    @GetMapping("/rooms/messages/{id}")
+    @GetMapping(value = "/rooms/messages/{id}")
     public ResponseEntity<List<MessageWithAuthorDTO>> getAllMessagesByRoomId(@PathVariable Long id) {
         Set<Message> messages = service.getAllMessages(id);
         List<MessageWithAuthorDTO> messagesWithAuthorDTO = messages.stream().map(

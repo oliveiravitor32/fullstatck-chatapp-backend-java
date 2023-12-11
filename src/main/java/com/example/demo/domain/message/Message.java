@@ -3,6 +3,7 @@ package com.example.demo.domain.message;
 import com.example.demo.domain.chatroom.ChatRoom;
 import com.example.demo.domain.user.User;
 import jakarta.persistence.*;
+import org.hibernate.annotations.Formula;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -29,7 +30,8 @@ public class Message implements Serializable {
     )
     private Set<User> usersWhoLiked = new HashSet<>();
 
-    private Integer likes;
+    private Integer likes = usersWhoLiked.size();
+
     @ManyToOne
     @JoinColumn(name = "author_id")
     private User author;
