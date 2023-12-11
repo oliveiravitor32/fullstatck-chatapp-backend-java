@@ -12,6 +12,8 @@ import org.springframework.context.annotation.Configuration;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 @Configuration
 public class TestConfig implements CommandLineRunner {
@@ -41,12 +43,16 @@ public class TestConfig implements CommandLineRunner {
 
         chatRoomRepository.saveAll(Arrays.asList(room1, room2));
         //    Repository.saveAll(Arrays.asList());
+        Set<User> likes = new HashSet<>();
+        likes.add(user1);
 
         Message msg1 = new Message(null, "Tomando café....", LocalDateTime.now(), user1, room1);
         Message msg2 = new Message(null, "Alguém ja ouviu aquela dos três porquinhos?", LocalDateTime.now(), user2, room2);
         Message msg3 = new Message(null, "Acordei!", LocalDateTime.now(), user2, room1);
         Message msg4 = new Message(null, "Já ouvi sim.", LocalDateTime.now(), user1, room2);
 
+        msg2.getUserWhoLiked().add(user1);
+        msg3.getUserWhoLiked().add(user1);
         messageRepository.saveAll(Arrays.asList(msg1, msg2, msg3, msg4));
 
     }

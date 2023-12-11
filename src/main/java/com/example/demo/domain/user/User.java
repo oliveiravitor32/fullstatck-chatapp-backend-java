@@ -14,12 +14,18 @@ public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String name;
+
     private String password;
 
     @JsonIgnore
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
     private Set<Message> messages = new HashSet<>();
+
+    @JsonIgnore
+    @ManyToMany(mappedBy = "usersWhoLiked")
+    private Set<Message> likedMessages = new HashSet<>();
 
     public User() {}
 
@@ -55,6 +61,10 @@ public class User implements Serializable {
 
     public Set<Message> getMessages() {
         return messages;
+    }
+
+    public Set<Message> getLikedMessages() {
+        return likedMessages;
     }
 
     @Override

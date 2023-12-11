@@ -30,7 +30,7 @@ public class MessageController {
         Message message = service.findById(id);
         MessageWithAuthorDTO messageWithAuthorDTO =
                 new MessageWithAuthorDTO(message.getId(), message.getContent(), message.getTimestemp(),
-                        message.getLikes(),new AuthorDTO(message.getAuthor().getId(), message.getAuthor().getName())
+                        message.getLikes(), new AuthorDTO(message.getAuthor().getId(), message.getAuthor().getName())
                         , message.getChatRoom());
         return ResponseEntity.ok().body(messageWithAuthorDTO);
     }

@@ -5,8 +5,6 @@ import com.example.demo.repositories.MessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
 public class MessageService {
 
@@ -18,11 +16,6 @@ public class MessageService {
     }
 
     public Message findById(Long id) {
-        Optional<Message> message = repository.findById(id);
-        if (message.isPresent()) {
-            return message.get();
-        } else {
-            return null;
-        }
+        return repository.findById(id).orElseThrow(() -> new RuntimeException("Message not found! Id: " + id));
     }
 }

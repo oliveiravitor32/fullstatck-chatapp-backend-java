@@ -6,6 +6,8 @@ import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "messages")
@@ -19,8 +21,15 @@ public class Message implements Serializable {
 
     private LocalDateTime timestemp;
 
-    private Integer likes;
+    @ManyToMany
+    @JoinTable(
+            name = "liked_messages",
+            joinColumns = @JoinColumn(name = "message_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private Set<User> usersWhoLiked = new HashSet<>();
 
+    private Integer likes;
     @ManyToOne
     @JoinColumn(name = "author_id")
     private User author;
@@ -72,12 +81,8 @@ public class Message implements Serializable {
         this.author = author;
     }
 
-    public Integer getLikes() {
-        return likes;
-    }
-
-    public void setLikes(Integer likes) {
-        this.likes = likes;
+    public Set getUserWhoLiked() {
+        return usersWhoLiked;
     }
 
     public ChatRoom getChatRoom() {
@@ -86,6 +91,14 @@ public class Message implements Serializable {
 
     public void setChatRoom(ChatRoom chatroom) {
         this.chatRoom = chatroom;
+    }
+
+    public Integer getLikes() {
+        return likes;
+    }
+
+    public void setLikes(Integer likes) {
+        this.likes = likes;
     }
 
     @Override
