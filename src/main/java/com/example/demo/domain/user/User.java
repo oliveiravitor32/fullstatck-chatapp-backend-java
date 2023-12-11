@@ -13,13 +13,13 @@ public class User implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
-    String name;
-    String password;
+    private Long id;
+    private String name;
+    private String password;
 
     @JsonIgnore
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
-    Set<Message> messages;
+    private Set<Message> messages = new HashSet<>();
 
     public User() {}
 
@@ -27,7 +27,6 @@ public class User implements Serializable {
         this.id = id;
         this.name = name;
         this.password = password;
-        this.messages = new HashSet<>();
     }
 
     public Long getId() {

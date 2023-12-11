@@ -1,9 +1,7 @@
 package com.example.demo.domain.message;
 
 import com.example.demo.domain.chatroom.ChatRoom;
-import com.example.demo.domain.user.AuthorDTO;
 import com.example.demo.domain.user.User;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -27,7 +25,6 @@ public class Message implements Serializable {
     @JoinColumn(name = "author_id")
     private User author;
 
-    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "chatroom_id")
     private ChatRoom chatRoom;
@@ -87,8 +84,8 @@ public class Message implements Serializable {
         return chatRoom;
     }
 
-    public void setChatRoom(ChatRoom chatRoom) {
-        this.chatRoom = chatRoom;
+    public void setChatRoom(ChatRoom chatroom) {
+        this.chatRoom = chatroom;
     }
 
     @Override

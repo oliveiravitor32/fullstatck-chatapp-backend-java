@@ -5,10 +5,9 @@ import com.example.demo.domain.message.Message;
 import com.example.demo.repositories.ChatRoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class ChatRoomService {
@@ -29,12 +28,12 @@ public class ChatRoomService {
         return repository.save(room);
     }
 
-    public List<Message> getAllMessages(Long id) {
+    public Set<Message> getAllMessages(Long id) {
         Optional<ChatRoom> chatRoom = repository.findById(id);
         if (chatRoom.isPresent()) {
             return chatRoom.get().getMessages();
         } else {
-            return Collections.emptyList();
+            return null;
         }
     }
 }

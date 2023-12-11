@@ -15,17 +15,16 @@ public class ChatRoom implements Serializable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
-    String name;
+    private Long id;
+    private String name;
 
     @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL)
-    List<Message> messages;
+    private Set<Message> messages = new HashSet<>();
 
     public ChatRoom() {}
     public ChatRoom(Long id, String name) {
         this.id = id;
         this.name = name;
-        this.messages = new ArrayList<>();
     }
 
     public Long getId() {
@@ -44,7 +43,7 @@ public class ChatRoom implements Serializable{
         this.name = name;
     }
 
-    public List<Message> getMessages() {
+    public Set<Message> getMessages() {
         return messages;
     }
 

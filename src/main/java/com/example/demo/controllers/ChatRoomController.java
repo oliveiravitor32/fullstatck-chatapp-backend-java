@@ -7,6 +7,7 @@ import com.example.demo.domain.chatroom.ChatRoomWithoutMessagesDTO;
 import com.example.demo.domain.message.Message;
 import com.example.demo.domain.message.MessageWithAuthorDTO;
 import com.example.demo.services.ChatRoomService;
+import com.example.demo.services.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +15,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestController
@@ -32,11 +34,11 @@ public class ChatRoomController {
     }
 
     @PostMapping("/rooms")
-    public ResponseEntity<ChatRoom> createRoom(@RequestBody ChatRoom room) {
+    public ResponseEntity<Void> createRoom(@RequestBody ChatRoom room) {
         ChatRoom chatRoom = service.insert(room);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}").buildAndExpand(chatRoom.getId()).toUri();
-        return ResponseEntity.created(uri).body(chatRoom);
+        return ResponseEntity.created(uri).build();
     }
 
     @GetMapping("/rooms/{id}")
@@ -52,9 +54,9 @@ public class ChatRoomController {
         return ResponseEntity.ok().body(chatRoomWithAuthor);
     }
 
-    @GetMapping("/rooms/{id}/messages")
+    @GetMapping("/rooms/messages/{id}")
     public ResponseEntity<List<MessageWithAuthorDTO>> getAllMessagesByRoomId(@PathVariable Long id) {
-        List<Message> messages = service.getAllMessages(id);
+        Set<Message> messages = service.getAllMessages(id);
         List<MessageWithAuthorDTO> messagesWithAuthorDTO = messages.stream().map((m) -> new MessageWithAuthorDTO(m))
                 .collect(Collectors.toList());
         return ResponseEntity.ok().body(messagesWithAuthorDTO);
