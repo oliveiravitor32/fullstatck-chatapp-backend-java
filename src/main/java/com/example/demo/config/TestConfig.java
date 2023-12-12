@@ -3,6 +3,7 @@ package com.example.demo.config;
 import com.example.demo.domain.chatroom.ChatRoom;
 import com.example.demo.domain.message.Message;
 import com.example.demo.domain.user.User;
+import com.example.demo.domain.user.UserRole;
 import com.example.demo.repositories.ChatRoomRepository;
 import com.example.demo.repositories.MessageRepository;
 import com.example.demo.repositories.UserRepository;
@@ -33,9 +34,9 @@ public class TestConfig implements CommandLineRunner {
         chatRoomRepository.deleteAll();
         messageRepository.deleteAll();
 
-        User user1 = new User(null, "Luna", "151516");
-        User user2 = new User(null, "Rachel", "23xza6");
-        User user3 = new User(null, "Miguel", "23xza6");
+        User user1 = new User(null, "Luna", "151516", UserRole.USER);
+        User user2 = new User(null, "Rachel", "23xza6", UserRole.USER);
+        User user3 = new User(null, "Miguel", "23xza6", UserRole.ADMIN);
 
         userRepository.saveAll(Arrays.asList(user1, user2, user3));
 

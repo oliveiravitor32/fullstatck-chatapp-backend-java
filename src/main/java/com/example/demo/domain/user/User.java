@@ -34,11 +34,19 @@ public class User implements UserDetails {
 
     public User() {}
 
-    public User(Long id, String nickname, String password) {
+    public User(Long id, String nickname, String password, UserRole role) {
         this.id = id;
         this.nickname = nickname;
         this.password = password;
+        this.role = role;
     }
+
+    public User(String nickname, String password, UserRole role) {
+        this.nickname = nickname;
+        this.password = password;
+        this.role = role;
+    }
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

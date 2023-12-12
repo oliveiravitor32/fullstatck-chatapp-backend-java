@@ -2,8 +2,8 @@ package com.example.demo.domain.user;
 
 public enum UserRole {
 
-    ADMIN("admin"),
-    USER("user");
+    USER("user"),
+    ADMIN("admin");
 
     private String role;
 
