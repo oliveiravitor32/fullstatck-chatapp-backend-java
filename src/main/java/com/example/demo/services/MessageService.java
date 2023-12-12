@@ -3,6 +3,7 @@ package com.example.demo.services;
 import com.example.demo.domain.chatroom.ChatRoom;
 import com.example.demo.domain.message.Message;
 import com.example.demo.domain.user.User;
+import com.example.demo.exceptions.CustomBadRequestException;
 import com.example.demo.exceptions.ResourceNotFoundException;
 import com.example.demo.repositories.ChatRoomRepository;
 import com.example.demo.repositories.MessageRepository;
@@ -37,11 +38,8 @@ public class MessageService {
 
             return repository.save(message);
         }
-        else if (message == null) {
-            throw new ResourceNotFoundException("BAD REQUEST!! NULL POINTER MESSAGE ");
-        }
         else {
-            throw new RuntimeException("Error in request data!");
+            throw new CustomBadRequestException("Invalid Request Data!");
         }
     }
 

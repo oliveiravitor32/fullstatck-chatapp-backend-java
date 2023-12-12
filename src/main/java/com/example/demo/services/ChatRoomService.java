@@ -2,6 +2,7 @@ package com.example.demo.services;
 
 import com.example.demo.domain.chatroom.ChatRoom;
 import com.example.demo.domain.message.Message;
+import com.example.demo.exceptions.CustomBadRequestException;
 import com.example.demo.exceptions.ResourceNotFoundException;
 import com.example.demo.repositories.ChatRoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,11 @@ public class ChatRoomService {
     }
 
     public ChatRoom insert(ChatRoom room) {
-        return repository.save(room);
+        if (room.getName() != null) {
+            return repository.save(room);
+        } else {
+            throw new CustomBadRequestException("Invalid Request Data!");
+        }
     }
 
     public Set<Message> getAllMessages(Long id) {

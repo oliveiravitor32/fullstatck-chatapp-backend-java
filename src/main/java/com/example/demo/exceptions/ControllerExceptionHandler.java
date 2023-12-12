@@ -19,4 +19,11 @@ public class ControllerExceptionHandler {
         return ResponseEntity.status(err.getStatus()).body(err);
     }
 
+    @ExceptionHandler(CustomBadRequestException.class)
+    public ResponseEntity<StandardError> handleBadRequest(CustomBadRequestException e, HttpServletRequest request) {
+        String error = "Invalid Request Data";
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        StandardError err = new StandardError(LocalDateTime.now(), status.value(), error, e.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(err.getStatus()).body(err);
+    }
 }
