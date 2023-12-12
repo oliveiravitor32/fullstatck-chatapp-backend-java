@@ -26,4 +26,21 @@ public class ControllerExceptionHandler {
         StandardError err = new StandardError(LocalDateTime.now(), status.value(), error, e.getMessage(), request.getRequestURI());
         return ResponseEntity.status(err.getStatus()).body(err);
     }
+
+    @ExceptionHandler(DuplicateLikeException.class)
+    public ResponseEntity<StandardError> handleDuplicateLike(DuplicateLikeException e, HttpServletRequest request) {
+        String error = "You already liked this message!";
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        StandardError err = new StandardError(LocalDateTime.now(), status.value(), error, e.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(err.getStatus()).body(err);
+    }
+
+    @ExceptionHandler(LikeNotFoundException.class)
+    public ResponseEntity<StandardError> handleLikeNotFound(LikeNotFoundException e, HttpServletRequest request) {
+        String error = "You are trying to remove a 'like' from a message you didn't like!";
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        StandardError err = new StandardError(LocalDateTime.now(), status.value(), error, e.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(err.getStatus()).body(err);
+    }
+
 }

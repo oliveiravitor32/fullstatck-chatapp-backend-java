@@ -4,6 +4,8 @@ import com.example.demo.domain.chatroom.ChatRoom;
 import com.example.demo.domain.message.Message;
 import com.example.demo.domain.user.User;
 import com.example.demo.exceptions.CustomBadRequestException;
+import com.example.demo.exceptions.DuplicateLikeException;
+import com.example.demo.exceptions.LikeNotFoundException;
 import com.example.demo.exceptions.ResourceNotFoundException;
 import com.example.demo.repositories.ChatRoomRepository;
 import com.example.demo.repositories.MessageRepository;
@@ -55,7 +57,7 @@ public class MessageService {
             message.setLikes(message.getUsersWhoLiked().size());
             repository.save(message);
         } else  {
-            new RuntimeException("The message has already been liked by this user!");
+            throw new DuplicateLikeException("The message has already been liked!");
         }
     }
 
@@ -63,7 +65,7 @@ public class MessageService {
         Message message = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Message not found! Id: " + id));
         User gettedUser = userRepository.findById(user.getId()).orElseThrow(() -> new ResourceNotFoundException("User not found! Id: " + message.getAuthor().getId()));
         if (!message.getUsersWhoLiked().contains(gettedUser)) {
-            new RuntimeException("This message was not liked by this user!");
+            throw new LikeNotFoundException("This message was not liked by this user!");
         } else  {
             message.getUsersWhoLiked().remove(gettedUser);
             message.setLikes(message.getUsersWhoLiked().size());
