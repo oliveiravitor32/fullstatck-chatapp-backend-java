@@ -53,7 +53,7 @@ public class ChatRoomController {
         Set<Message> messages = service.getAllMessages(id);
         Set<MessageWithAuthorDTO> messagesWithAuthorDTO = messages.stream().map(
                 (m) -> new MessageWithAuthorDTO(m.getId(), m.getContent(), m.getTimestemp(), m.getLikes(),
-                        new AuthorDTO(m.getAuthor().getId(), m.getAuthor().getUsername()), m.getChatRoom()))
+                        new AuthorDTO(m.getAuthor().getId(), m.getAuthor().getNickname()), m.getChatRoom()))
                 .collect(Collectors.toSet());
         return ResponseEntity.ok().body(messagesWithAuthorDTO);
     }

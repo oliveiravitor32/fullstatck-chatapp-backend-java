@@ -25,7 +25,7 @@ public class MessageController {
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(message.getId()).toUri();
         MessageWithAuthorDTO messageWithAuthorDTO =
                 new MessageWithAuthorDTO(message.getId(), message.getContent(), message.getTimestemp(), message.getLikes(),
-                        new AuthorDTO(message.getAuthor().getId(), message.getAuthor().getUsername()), message.getChatRoom());
+                        new AuthorDTO(message.getAuthor().getId(), message.getAuthor().getNickname()), message.getChatRoom());
         return ResponseEntity.created(uri).body(messageWithAuthorDTO);
     }
 
@@ -34,7 +34,7 @@ public class MessageController {
         Message message = service.findById(id);
         MessageWithAuthorDTO messageWithAuthorDTO =
                 new MessageWithAuthorDTO(message.getId(), message.getContent(), message.getTimestemp(),
-                        message.getLikes(), new AuthorDTO(message.getAuthor().getId(), message.getAuthor().getUsername())
+                        message.getLikes(), new AuthorDTO(message.getAuthor().getId(), message.getAuthor().getNickname())
                         , message.getChatRoom());
         return ResponseEntity.ok().body(messageWithAuthorDTO);
     }

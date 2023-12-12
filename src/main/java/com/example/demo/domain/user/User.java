@@ -3,23 +3,26 @@ package com.example.demo.domain.user;
 import com.example.demo.domain.message.Message;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.swing.*;
-import java.io.Serializable;
 import java.util.*;
 
 @Entity
 @Table(name = "users")
-public class User implements Serializable {
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "username", unique = true)
-    private String username;
+    @Column(name = "nickname", unique = true)
+    private String nickname;
 
     private String password;
+
+    private UserRole role;
 
     @JsonIgnore
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
@@ -31,10 +34,43 @@ public class User implements Serializable {
 
     public User() {}
 
-    public User(Long id, String username, String password) {
+    public User(Long id, String nickname, String password) {
         this.id = id;
-        this.username = username;
+        this.nickname = nickname;
         this.password = password;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+       if (this.role == UserRole.ADMIN) {
+           return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
+       } else {
+           return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+       }
+    }
+    @Override
+    public String getUsername() {
+        return nickname;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 
     public Long getId() {
@@ -45,12 +81,12 @@ public class User implements Serializable {
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
+    public String getNickname() {
+        return nickname;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 
     public String getPassword() {
@@ -67,6 +103,14 @@ public class User implements Serializable {
 
     public Set<Message> getLikedMessages() {
         return likedMessages;
+    }
+
+    public UserRole getRole() {
+        return role;
+    }
+
+    public void setRole(UserRole role) {
+        this.role = role;
     }
 
     @Override
