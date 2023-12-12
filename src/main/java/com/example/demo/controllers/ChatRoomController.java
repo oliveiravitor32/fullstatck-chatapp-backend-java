@@ -2,13 +2,11 @@ package com.example.demo.controllers;
 
 
 import com.example.demo.domain.chatroom.ChatRoom;
-import com.example.demo.domain.chatroom.ChatRoomWithAuthorOnMessageDTO;
 import com.example.demo.domain.chatroom.ChatRoomWithoutMessagesDTO;
 import com.example.demo.domain.message.Message;
 import com.example.demo.domain.message.MessageWithAuthorDTO;
 import com.example.demo.domain.user.AuthorDTO;
 import com.example.demo.services.ChatRoomService;
-import com.example.demo.services.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -55,7 +53,7 @@ public class ChatRoomController {
         Set<Message> messages = service.getAllMessages(id);
         Set<MessageWithAuthorDTO> messagesWithAuthorDTO = messages.stream().map(
                 (m) -> new MessageWithAuthorDTO(m.getId(), m.getContent(), m.getTimestemp(), m.getLikes(),
-                        new AuthorDTO(m.getAuthor().getId(), m.getAuthor().getName()), m.getChatRoom()))
+                        new AuthorDTO(m.getAuthor().getId(), m.getAuthor().getUsername()), m.getChatRoom()))
                 .collect(Collectors.toSet());
         return ResponseEntity.ok().body(messagesWithAuthorDTO);
     }

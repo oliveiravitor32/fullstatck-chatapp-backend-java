@@ -35,8 +35,9 @@ public class TestConfig implements CommandLineRunner {
 
         User user1 = new User(null, "Luna", "151516");
         User user2 = new User(null, "Rachel", "23xza6");
+        User user3 = new User(null, "Miguel", "23xza6");
 
-        userRepository.saveAll(Arrays.asList(user1, user2));
+        userRepository.saveAll(Arrays.asList(user1, user2, user3));
 
         ChatRoom room1 = new ChatRoom(null, "Cotidiano");
         ChatRoom room2 = new ChatRoom(null, "Histórias");

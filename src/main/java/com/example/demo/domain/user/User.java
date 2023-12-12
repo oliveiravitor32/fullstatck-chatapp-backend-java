@@ -4,6 +4,7 @@ import com.example.demo.domain.message.Message;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
+import javax.swing.*;
 import java.io.Serializable;
 import java.util.*;
 
@@ -15,7 +16,8 @@ public class User implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
+    @Column(name = "username", unique = true)
+    private String username;
 
     private String password;
 
@@ -29,9 +31,9 @@ public class User implements Serializable {
 
     public User() {}
 
-    public User(Long id, String name, String password) {
+    public User(Long id, String username, String password) {
         this.id = id;
-        this.name = name;
+        this.username = username;
         this.password = password;
     }
 
@@ -43,12 +45,12 @@ public class User implements Serializable {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getUsername() {
+        return username;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPassword() {
