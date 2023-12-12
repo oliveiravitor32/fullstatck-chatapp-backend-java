@@ -16,6 +16,8 @@ public class ChatRoom implements Serializable{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+
+    @JsonIgnore
     @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL)
     private Set<Message> messages = new HashSet<>();
 

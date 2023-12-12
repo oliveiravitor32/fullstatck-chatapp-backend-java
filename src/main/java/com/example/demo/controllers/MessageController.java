@@ -20,10 +20,13 @@ public class MessageController {
     MessageService service;
 
     @PostMapping
-    public ResponseEntity<Message> addMessage(@RequestBody Message message) {
-        Message msg = service.insert(message);
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(msg.getId()).toUri();
-        return ResponseEntity.created(uri).body(msg);
+    public ResponseEntity<MessageWithAuthorDTO> addMessage(@RequestBody Message message) {
+        message = service.insert(message);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(message.getId()).toUri();
+        MessageWithAuthorDTO messageWithAuthorDTO =
+                new MessageWithAuthorDTO(message.getId(), message.getContent(), message.getTimestemp(), message.getLikes(),
+                        new AuthorDTO(message.getAuthor().getId(), message.getAuthor().getName()), message.getChatRoom());
+        return ResponseEntity.created(uri).body(messageWithAuthorDTO);
     }
 
     @GetMapping(value = "/{id}")
