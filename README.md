@@ -1,4 +1,4 @@
-# Back-End of the ChatApp
+# Back-End para ChatApp
 
 ![Static Badge](https://img.shields.io/badge/Java-Jdk?logo=openjdk&logoColor=white&labelColor=orange&color=orange)
 ![Static Badge](https://img.shields.io/badge/Spring_Boot-Spring?logo=Spring&logoColor=white&labelColor=green&color=green)
