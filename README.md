@@ -5,8 +5,8 @@
 ![Static Badge](https://img.shields.io/badge/JWT-JWT?logo=JSON%20Web%20Tokens&logoColor=white&labelColor=black&color=black)
 ![Static Badge](https://img.shields.io/badge/PostgreSQL-PostgreSQl?logo=PostgreSQL&logoColor=white&labelColor=blue&color=blue)
 
-Este projeto é uma API Rest com Web Socket para um aplicativo de chat contruído com: Java, Spring Boot, PostgreSQL, Spring Security com JWT para authenticação 
-e Web Socket para comunicação em tempo real
+Este projeto é uma API Rest com Web Socket para um aplicativo de chat contruído com: **Java, Spring Boot, PostgreSQL, Spring Security com JWT para authenticação 
+e Web Socket para comunicação em tempo real.**
 
 ## Instalação 
  - Clone o repositório
@@ -21,14 +21,14 @@ Obs: O Web Socket está implementado de forma a funcionar de acordo com as requi
 e retornando também para os usuários conectados em tempo real.
 
 ## API Endpoints
-GET /chatroom/rooms - Retorna uma lista com todas as salas de bate papo. (Usuário autenticado)
-GET /chatroom/{id} - Retorna uma sala de acordo com o id. (Usuário autenticado)
-GET /chatroom/{id}/messages - Retorna uma lista com todas as mensagens de acordo com o id da sala. (Usuário autenticado)
-GET /messages/{id} - Retorna uma mensagem com autor de acordo com o id da mensagem procurada. (Usuário autenticado)
-POST /chatroom - Registra uma nova sala. (Usuário autenticado)
-POST /messages - Registra uma nova mensagem. (Usuário autenticado)
-POST /auth/register - Registra um novo usuário. (Permite todos)
-POST /auth/login - Loga no app retornando um token para o usuário. (Permite todos)
+ - GET /chatroom/rooms - Retorna uma lista com todas as salas de bate papo. (Usuário autenticado)
+ - GET /chatroom/{id} - Retorna uma sala de acordo com o id. (Usuário autenticado)
+ - GET /chatroom/{id}/messages - Retorna uma lista com todas as mensagens de acordo com o id da sala. (Usuário autenticado)
+ - GET /messages/{id} - Retorna uma mensagem com autor de acordo com o id da mensagem procurada. (Usuário autenticado)
+ - POST /chatroom - Registra uma nova sala. (Usuário autenticado)
+ - POST /messages - Registra uma nova mensagem. (Usuário autenticado)
+ - POST /auth/register - Registra um novo usuário. (Permite todos)
+ - POST /auth/login - Loga no app retornando um token para o usuário. (Permite todos)
 
 ## Autenticação
 A API utiliza Spring Security para o controle de autenticação. 
