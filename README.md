@@ -11,7 +11,7 @@ e Web Socket para comunicação em tempo real.**
 ## Instalação 
  - Clone o repositório
  - Instale as dependências com o Maven
- - Instale [PostgresSQL](https://www.postgresql.org/)
+ - Instale o [PostgresSQL](https://www.postgresql.org/)
 
 ## Modo de uso
  - Inicie a aplicação com o Maven
