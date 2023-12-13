@@ -53,6 +53,14 @@ public class Message implements Serializable {
         this.chatRoom = chatRoom;
         this.likes = 0;
     }
+    public Message(Long id, String content, User author, ChatRoom chatRoom) {
+        this.id = id;
+        this.content = content;
+        this.timestemp = LocalDateTime.now();
+        this.author = author;
+        this.chatRoom = chatRoom;
+        this.likes = 0;
+    }
 
     public Long getId() {
         return id;

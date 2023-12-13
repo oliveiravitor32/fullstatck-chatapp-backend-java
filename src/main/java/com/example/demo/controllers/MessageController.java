@@ -2,11 +2,13 @@ package com.example.demo.controllers;
 
 import com.example.demo.domain.message.Message;
 import com.example.demo.domain.message.MessageWithAuthorDTO;
+import com.example.demo.domain.message.SimpleMessageDTO;
 import com.example.demo.domain.user.AuthorDTO;
 import com.example.demo.domain.user.User;
 import com.example.demo.services.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -19,13 +21,27 @@ public class MessageController {
     @Autowired
     MessageService service;
 
+    @Autowired
+    WebSocketController webSocketController;
+
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
+
     @PostMapping
     public ResponseEntity<MessageWithAuthorDTO> addMessage(@RequestBody Message message) {
         message = service.insert(message);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(message.getId()).toUri();
+
         MessageWithAuthorDTO messageWithAuthorDTO =
                 new MessageWithAuthorDTO(message.getId(), message.getContent(), message.getTimestemp(), message.getLikes(),
                         new AuthorDTO(message.getAuthor().getId(), message.getAuthor().getNickname()), message.getChatRoom());
+
+        //Web Socket
+        SimpleMessageDTO simpMessageWebSocket = new SimpleMessageDTO(message.getId(),message.getContent(),
+                new AuthorDTO(message.getAuthor().getId(), message.getAuthor().getNickname()), message.getChatRoom());
+
+        webSocketController.sendMessageToRoom(simpMessageWebSocket.chatRoom().getId(), simpMessageWebSocket);
+
         return ResponseEntity.created(uri).body(messageWithAuthorDTO);
     }
 
