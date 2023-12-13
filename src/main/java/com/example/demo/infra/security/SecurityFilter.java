@@ -1,5 +1,8 @@
 package com.example.demo.infra.security;
 
+import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.example.demo.exceptions.AuthenticationInvalidTokenException;
+import com.example.demo.exceptions.ResourceNotFoundException;
 import com.example.demo.repositories.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -35,7 +38,8 @@ public class SecurityFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String token = recoverToken(request);
         if ( token != null) {
-            var nickname = tokenService.validateToken(token);
+
+            String nickname = tokenService.validateToken(token);
             UserDetails user = userRepository.findByNickname(nickname);
 
             var authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());

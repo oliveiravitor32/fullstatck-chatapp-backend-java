@@ -20,7 +20,7 @@ public class ControllerExceptionHandler {
     }
 
     @ExceptionHandler(CustomBadRequestException.class)
-    public ResponseEntity<StandardError> handleBadRequest(CustomBadRequestException e, HttpServletRequest request) {
+    public ResponseEntity<StandardError> handlePostBadRequest(CustomBadRequestException e, HttpServletRequest request) {
         String error = "Invalid Request Data";
         HttpStatus status = HttpStatus.BAD_REQUEST;
         StandardError err = new StandardError(LocalDateTime.now(), status.value(), error, e.getMessage(), request.getRequestURI());
@@ -43,4 +43,27 @@ public class ControllerExceptionHandler {
         return ResponseEntity.status(err.getStatus()).body(err);
     }
 
+    @ExceptionHandler(AuthenticationInvalidTokenException.class)
+    public ResponseEntity<StandardError> handleInvalidToken(AuthenticationInvalidTokenException e, HttpServletRequest request) {
+        String error = "The entered token is invalid!";
+        HttpStatus status = HttpStatus.UNAUTHORIZED;
+        StandardError err = new StandardError(LocalDateTime.now(), status.value(), error, e.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(err.getStatus()).body(err);
+    }
+
+    @ExceptionHandler(AuthenticationUserAlreadyExistsException.class)
+    public ResponseEntity<StandardError> handleResgisterUserNicknameAlredyExists(AuthenticationUserAlreadyExistsException e, HttpServletRequest request) {
+        String error = "The nickname you entered already exists!";
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        StandardError err = new StandardError(LocalDateTime.now(), status.value(), error, e.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(err.getStatus()).body(err);
+    }
+
+    @ExceptionHandler(AuthenticationIncorrectLogin.class)
+    public ResponseEntity<StandardError> handleIncorrectLogin(AuthenticationIncorrectLogin e, HttpServletRequest request) {
+        String error = "The nickname or password is invalid!";
+        HttpStatus status = HttpStatus.FORBIDDEN;
+        StandardError err = new StandardError(LocalDateTime.now(), status.value(), error, e.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(err.getStatus()).body(err);
+    }
 }
