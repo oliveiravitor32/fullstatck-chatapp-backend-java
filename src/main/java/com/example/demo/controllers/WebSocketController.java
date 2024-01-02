@@ -1,6 +1,5 @@
 package com.example.demo.controllers;
 
-import com.example.demo.domain.message.Message;
 import com.example.demo.domain.message.SimpleMessageDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
