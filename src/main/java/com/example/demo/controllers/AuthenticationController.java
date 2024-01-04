@@ -14,7 +14,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin(origins = "http://localhost:4200/")
+@CrossOrigin(origins = {"http://localhost:4200", "https://fullstack-chatapp-frontend-angular.vercel.app"})
 @RestController
 @RequestMapping("auth")
 public class AuthenticationController {
@@ -34,8 +34,7 @@ public class AuthenticationController {
         try {
             Authentication auth = authenticationManager.authenticate(usernamePassword);
             String token = tokenService.generateToken((User) auth.getPrincipal());
-
-            return ResponseEntity.ok().body(new LoginResponseDTO(token));
+            return ResponseEntity.ok().body(new LoginResponseDTO(token, user.nickname()));
         } catch (AuthenticationException e) {
             throw new AuthenticationIncorrectLogin("Incorrect login!");
         }
