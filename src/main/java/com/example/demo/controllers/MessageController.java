@@ -1,14 +1,22 @@
 package com.example.demo.controllers;
 
+import com.auth0.jwt.JWT;
+import com.example.demo.domain.chatroom.ChatRoom;
 import com.example.demo.domain.message.Message;
 import com.example.demo.domain.message.MessageWithAuthorDTO;
 import com.example.demo.domain.message.SimpleMessageDTO;
 import com.example.demo.domain.user.AuthorDTO;
 import com.example.demo.domain.user.User;
+import com.example.demo.infra.security.TokenService;
+import com.example.demo.repositories.UserRepository;
+import com.example.demo.services.AuthorizationService;
+import com.example.demo.services.ChatRoomService;
 import com.example.demo.services.MessageService;
+import com.example.demo.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -23,13 +31,40 @@ public class MessageController {
     MessageService service;
 
     @Autowired
+    ChatRoomService chatRoomService;
+
+    @Autowired
+    UserService userService;
+
+    @Autowired
+    TokenService tokenService;
+
+    @Autowired
     WebSocketController webSocketController;
 
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
     @PostMapping
-    public ResponseEntity<MessageWithAuthorDTO> addMessage(@RequestBody Message message) {
+    public ResponseEntity<MessageWithAuthorDTO> addMessage(@RequestHeader("Authorization") String token, @RequestBody SimpleMessageDTO sendMessage) {
+
+        System.out.println(sendMessage.authorNickname());
+
+        Long userId = tokenService.getUserId(token);
+
+        System.out.println(userId);
+
+        ChatRoom chatRoom = chatRoomService.findById(sendMessage.chatRoomId());
+        User user = userService.findById(userId);
+
+        System.out.println(user.getNickname());
+
+        if(!user.getNickname().equals(sendMessage.authorNickname())) {
+            throw new RuntimeException("Token != User");
+        }
+
+        String content = sendMessage.content();
+        Message message = new Message(content, user, chatRoom);
         message = service.insert(message);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(message.getId()).toUri();
 
@@ -38,10 +73,10 @@ public class MessageController {
                         new AuthorDTO(message.getAuthor().getId(), message.getAuthor().getNickname()), message.getChatRoom());
 
         //Web Socket
-        SimpleMessageDTO simpMessageWebSocket = new SimpleMessageDTO(message.getId(),message.getContent(),
-                new AuthorDTO(message.getAuthor().getId(), message.getAuthor().getNickname()), message.getChatRoom());
+        SimpleMessageDTO simpMessageWebSocket = new SimpleMessageDTO(message.getContent(),
+                message.getAuthor().getNickname(), message.getChatRoom().getId());
 
-        webSocketController.sendMessageToRoom(simpMessageWebSocket.chatRoom().getId(), simpMessageWebSocket);
+        webSocketController.sendMessageToRoom(simpMessageWebSocket.chatRoomId(), simpMessageWebSocket);
 
         return ResponseEntity.created(uri).body(messageWithAuthorDTO);
     }

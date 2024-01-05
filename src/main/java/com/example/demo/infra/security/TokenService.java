@@ -25,6 +25,7 @@ public class TokenService {
             String token = JWT.create()
                     .withIssuer("auth-api")
                     .withSubject(user.getNickname())
+                    .withClaim("userId", user.getId())
                     .withExpiresAt(generateExpirationDate())
                     .sign(algorithm);
             return token;
@@ -48,5 +49,18 @@ public class TokenService {
 
     private Instant generateExpirationDate() {
         return LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.of("-03:00"));
+    }
+
+    public Long getUserId(String token) {
+        try {
+            Algorithm algorithm = Algorithm.HMAC256(secret);
+            return JWT.require(algorithm)
+                    .withIssuer("auth-api")
+                    .build()
+                    .verify(token.substring(7))
+                    .getClaim("userId").asLong();
+        } catch (JWTVerificationException e) {
+            throw new AuthenticationInvalidTokenException("Invalid token!");
+        }
     }
 }

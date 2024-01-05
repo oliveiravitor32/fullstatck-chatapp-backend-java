@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Formula;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -53,8 +54,7 @@ public class Message implements Serializable {
         this.chatRoom = chatRoom;
         this.likes = 0;
     }
-    public Message(Long id, String content, User author, ChatRoom chatRoom) {
-        this.id = id;
+    public Message( String content, User author, ChatRoom chatRoom) {
         this.content = content;
         this.timestemp = LocalDateTime.now();
         this.author = author;
