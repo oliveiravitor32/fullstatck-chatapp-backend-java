@@ -16,6 +16,9 @@ import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.channel.ChannelProcessingFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 
 @Configuration
@@ -28,18 +31,16 @@ public class SecurityConfigurations {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-
         return httpSecurity
+                .cors(configurer -> configurer.configurationSource(corsConfigurationSource()))
                 .csrf(csfr -> csfr.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
+                        .requestMatchers("/chat/**", "/chat").permitAll()
                         .anyRequest().authenticated()
                 )
-                .and() // Adiciona uma nova configuração para o WebSocket
-                .apply(new WebSocketSecurityConfigurer())
-                .and() // Fim da configuração para o WebSocket
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
@@ -54,12 +55,15 @@ public class SecurityConfigurations {
         return new BCryptPasswordEncoder();
     }
 
-    private static class WebSocketSecurityConfigurer extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity> {
-
-        @Override
-        public void configure(HttpSecurity http) {
-            WebSocketSecurityInterceptor webSocketSecurityInterceptor = new WebSocketSecurityInterceptor();
-            http.addFilterBefore(webSocketSecurityInterceptor, ChannelProcessingFilter.class);
-        }
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.addAllowedOrigin("http://localhost:4200");
+        configuration.addAllowedOrigin("https://fullstack-chatapp-frontend-angular.vercel.app");
+        configuration.addAllowedHeader("*");
+        configuration.addAllowedMethod("*");
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 }

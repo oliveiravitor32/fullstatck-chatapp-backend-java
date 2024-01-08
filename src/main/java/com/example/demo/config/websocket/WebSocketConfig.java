@@ -9,6 +9,7 @@ import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
+import org.springframework.security.config.annotation.web.messaging.MessageSecurityMetadataSourceRegistry;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
@@ -24,8 +25,6 @@ import java.util.Map;
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
-    @Autowired
-    TokenService tokenService;
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
@@ -35,42 +34,6 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/chat/{roomId}").withSockJS();
-    }
-
-    private class WebSocketHandshakeInterceptor implements HandshakeInterceptor {
-
-        @Override
-        public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response,
-                                       WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception {
-
-            StompHeaderAccessor accessor = StompHeaderAccessor.create(StompCommand.CONNECT);
-
-            accessor.setNativeHeader("Authorization", request.getHeaders().getFirst("Authorization"));
-
-            String accessToken = extractAccessToken(accessor);
-
-            String nickname= tokenService.validateToken(accessToken);
-            attributes.put("nickname", nickname);
-            return true;
-        }
-
-        @Override
-        public void afterHandshake(ServerHttpRequest request, ServerHttpResponse response,
-                                   WebSocketHandler wsHandler, Exception exception) {
-        }
-
-        private String extractAccessToken(StompHeaderAccessor accessor) {
-            List<String> authorizationHeaders = accessor.getNativeHeader("Authorization");
-
-            if (authorizationHeaders != null && !authorizationHeaders.isEmpty()) {
-                String authorizationHeader = authorizationHeaders.get(0);
-
-                if (authorizationHeader.startsWith("Bearer ")) {
-                    return authorizationHeader.substring(7); // Remova o prefixo "Bearer "
-                }
-            }
-            return null;
-        }
+        registry.addEndpoint("/chat/{roomId}");
     }
 }

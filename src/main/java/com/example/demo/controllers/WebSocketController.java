@@ -14,8 +14,9 @@ public class WebSocketController {
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
-    @MessageMapping("/chat/{roomId}")
+    @MessageMapping("/chat/{roomId}/message")
     public void sendMessageToRoom(@DestinationVariable Long roomId, SimpleMessageDTO message) {
+        System.out.println("Controller sendMessage");
         messagingTemplate.convertAndSend("/chat/" + roomId, message);
     }
 }
